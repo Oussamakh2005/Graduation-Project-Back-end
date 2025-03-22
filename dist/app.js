@@ -1,8 +1,13 @@
 import express from "express";
 import { PORT } from "./env.js";
 import router from "./routes/main.js";
+import cors from "cors";
 const app = express();
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+    origin: "*"
+}));
 app.get('/test', (req, res) => {
     res.status(200).json({
         ok: true,

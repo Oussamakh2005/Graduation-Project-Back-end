@@ -13,21 +13,166 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//Users roles 
 enum Role {
   ADMIN
   SALES
   PAYMENT
   CLIENT
 }
-model User {
-  id        String   @id @default(cuid())
-  firstName String
-  lastName  String
-  email     String   @unique
-  phone     String
-  password  String
-  role      Role     @default(CLIENT)
-  isVerified Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+//Car type 
+enum CarType {
+  SUDAN
+  HATCHBACK
+  SUV
+  TRUCK
+  VAN
+  COUPE
+  CONVERTIBLE
+  WAGON
+  SPORTS
+  HYBRID
 }
+
+//Car transmission
+enum Transmission {
+  AUTO
+  MANUAL
+}
+
+//Car drive type 
+enum DriveType {
+  FWD
+  RWD
+  AWD
+}
+
+//Engine type 
+enum EngineType {
+  PETROL
+  GAS
+  DIESEL
+  ELECTRIC
+  HYBRID
+}
+
+//Payment type
+enum PaymentType {
+  CASH
+  ONLINE
+  INSTALLMENT
+}
+
+//Sale status
+enum PaymentStatus {
+  ONPAYING
+  COMPLETED
+}
+//Installment status
+enum InstallmentStatus {
+  PENDING
+  PAID
+  OVERDUE
+}
+
+//User model
+model User {
+  id         String   @id @default(cuid())
+  firstName  String
+  lastName   String
+  email      String   @unique
+  phone      String
+  password   String
+  role       Role     @default(CLIENT)
+  isVerified Boolean  @default(false)
+  sales      Sale[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+//Car model
+model Car {
+  //initialize
+  id           String       @id @default(cuid())
+  model        String
+  year         String
+  type         CarType
+  //second step
+  engine       Engine[]
+  //third step
+  transmission Transmission
+  driveType    DriveType
+  colors       String[]     @default([])
+  features     String[]     @default([])
+  price        Float?
+  discount     Float        @default(0)
+  availability Boolean      @default(false)
+  //last step
+  images       String[]     @default([])
+  sales        Sale[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+//Engine model
+model Engine {
+  id         String     @id @default(cuid())
+  type       EngineType
+  capacity   Int
+  horsepower Int
+  carId      String
+  car        Car        @relation(fields: [carId], references: [id])
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Sale {
+  id            String        @id @default(cuid())
+  carId         String
+  userId        String
+  car           Car           @relation(fields: [carId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
+  carColor      String
+  salePrice     Int
+  saleDate      String //YYYY-MM-DD
+  paymentType   PaymentType
+  paymentStatus PaymentStatus  @default(ONPAYING)
+  payments      Payment[]
+  installments  Installment[] //will change it later to installment plan
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  saleId        String
+  sale          Sale     @relation(fields: [saleId], references: [id])
+  paymentDate   String //YYYY-MM-DD
+  paymentAmout  Int
+  paymentMethod String
+  transactionId String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Installment {
+  id                String            @id @default(cuid())
+  saleId            String
+  sale              Sale              @relation(fields: [saleId], references: [id]) //will change it later to installment plan
+  installmentNumber Int
+  DueDate           String //YYYY-MM-DD
+  paymentId         String?
+  status            InstallmentStatus
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}
+/*model PaymentPlan {
+  id                String            @id @default(cuid())
+  saleId            String            //FK
+  months            Int
+  interestRate      Int
+  downPayment       Int
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}*/

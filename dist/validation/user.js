@@ -6,4 +6,5 @@ export const newUserSchema = z.object({
     phone: z.string().length(10).regex(/^(05|06|07)\d{8}$/),
     password: z.string().min(8).max(20),
 });
+export const updateUserRoleSchema = z.enum(["ADMIN", "SALES", "PAYMENT", "CLIENT"]);
 //# sourceMappingURL=user.js.map
