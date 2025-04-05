@@ -1,8 +1,13 @@
 import { Router } from "express";
 import usersRouter from "./userRoutes.js";
 import carsRouter from "./carRoutes.js";
+import saleRouter from "./saleRoutes.js";
+import paymentRouter from "./paymentRoutes.js";
+import installmentRouter from "./intallmentRouter.js";
 const router = Router();
 router.use('/user', usersRouter);
 router.use('/car', carsRouter);
+router.use('/sale', saleRouter);
+router.use('/payment', paymentRouter);
+router.use('/installment', installmentRouter);
 export default router;
-//# sourceMappingURL=main.js.map

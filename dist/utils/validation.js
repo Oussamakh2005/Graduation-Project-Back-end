@@ -8,4 +8,3 @@ const validate = (data, schema) => {
     }
 };
 export default validate;
-//# sourceMappingURL=validation.js.map

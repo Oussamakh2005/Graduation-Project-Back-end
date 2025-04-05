@@ -1,44 +1,40 @@
-import upload from "../../../utils/uploadFile.js";
-import prisma from "../../../services/prismaClient.js";
+import upload from "../../../services/upload/uploadFile.js";
+import prisma from "../../../services/db/prismaClient.js";
+import Exceptions from "../../../utils/Exceptions.js";
+import HttpExeception from "../../../utils/HttpExeception.js";
 const uploadCarImages = async (req, res) => {
-    try {
-        if (!req.files || req.files.length === 0) {
-            res.status(400).json({
-                ok: false,
-                msg: 'No images uploaded'
-            });
+    if (!req.files || req.files.length === 0) {
+        throw new HttpExeception("No images uploaded", 422, Exceptions.INVALID_DATA);
+    }
+    const imagesURL = [];
+    let mainImageUrl = "";
+    const filesArray = Array.isArray(req.files) ? req.files : Object.values(req.files).flat();
+    for (const file of filesArray) {
+        const url = await upload(file);
+        if (!url) {
+            continue;
+        }
+        if (file.fieldname === "main") {
+            mainImageUrl = url;
         }
         else {
-            const imagesURL = [];
-            const filesArray = Array.isArray(req.files) ? req.files : Object.values(req.files).flat();
-            for (const file of filesArray) {
-                const url = await upload(file);
-                if (!url) {
-                    continue;
-                }
-                imagesURL.push(url);
-            }
-            await prisma.car.update({
-                where: {
-                    id: req.params.id,
-                },
-                data: {
-                    images: imagesURL,
-                    availability: true,
-                }
-            });
-            res.status(201).json({
-                ok: true,
-                msg: "Images uploaded successfully"
-            });
+            imagesURL.push(url);
         }
     }
-    catch (err) {
-        res.status(500).json({
-            ok: false,
-            msg: 'Something went wrong'
-        });
-    }
+    await prisma.carModel.update({
+        where: {
+            id: req.params.id,
+        },
+        data: {
+            mainImage: mainImageUrl,
+            images: imagesURL,
+            availability: true,
+            infoComplete: true
+        }
+    });
+    res.status(201).json({
+        ok: true,
+        msg: "Images uploaded successfully"
+    });
 };
 export default uploadCarImages;
-//# sourceMappingURL=uploadCarImages.js.map

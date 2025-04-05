@@ -4,4 +4,3 @@ export const signJwt = (data, expireIn) => {
     const token = jwt.sign(data, JWT, { expiresIn: expireIn });
     return token;
 };
-//# sourceMappingURL=signJwt.js.map

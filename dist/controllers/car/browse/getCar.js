@@ -1,32 +1,28 @@
-import prisma from "../../../services/prismaClient.js";
+import prisma from "../../../services/db/prismaClient.js";
+import HttpExeception from "../../../utils/HttpExeception.js";
+import Exceptions from "../../../utils/Exceptions.js";
 const getCar = async (req, res) => {
-    const carId = req.body.id;
-    try {
-        const car = await prisma.car.findMany({
-            where: {
-                id: carId,
-            },
-            include: {
-                engine: {
-                    select: {
-                        type: true,
-                        capacity: true,
-                        horsepower: true,
-                    }
+    const carId = req.params.id;
+    const car = await prisma.carModel.findUnique({
+        where: {
+            id: carId,
+        },
+        include: {
+            engine: {
+                select: {
+                    type: true,
+                    capacity: true,
+                    horsepower: true,
                 }
             }
-        });
-        res.status(200).json({
-            ok: true,
-            data: car
-        });
+        }
+    });
+    if (!car) {
+        throw new HttpExeception("Car not found", 404, Exceptions.NOT_FOUND);
     }
-    catch (err) {
-        res.status(500).json({
-            ok: false,
-            msg: "Something went wrong"
-        });
-    }
+    res.status(200).json({
+        ok: true,
+        data: car
+    });
 };
 export default getCar;
-//# sourceMappingURL=getCar.js.map

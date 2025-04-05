@@ -6,11 +6,11 @@ import isAuthenticated from "../middlewares/authenticated.js";
 import authenticated from "../controllers/user/auth/authenticated.js";
 import isAdmin from "../middlewares/isAdmin.js";
 import updateUserRole from "../controllers/user/update/updateUserRole.js";
+import { errorHandler } from "../middlewares/errorHandler.js";
 const usersRouter = Router();
-usersRouter.post('/signup', newUser);
-usersRouter.post('/login', login);
-usersRouter.get('/verify', verifyUser);
-usersRouter.get('/auhtenticated', isAuthenticated, authenticated);
-usersRouter.patch('/role/:id', isAdmin, updateUserRole);
+usersRouter.post('/signup', errorHandler(newUser));
+usersRouter.post('/login', errorHandler(login));
+usersRouter.get('/verify', errorHandler(verifyUser));
+usersRouter.get('/auhtenticated', errorHandler(isAuthenticated), errorHandler(authenticated));
+usersRouter.patch('/role/:id', errorHandler(isAdmin), errorHandler(updateUserRole));
 export default usersRouter;
-//# sourceMappingURL=userRoutes.js.map

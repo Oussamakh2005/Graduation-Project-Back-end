@@ -1,41 +1,27 @@
 import validate from "../../../utils/validation.js";
 import { initializeCarSchema } from "../../../validation/car.js";
-import prisma from "../../../services/prismaClient.js";
+import prisma from "../../../services/db/prismaClient.js";
+import HttpExeception from "../../../utils/HttpExeception.js";
+import Exceptions from "../../../utils/Exceptions.js";
 const initializeCar = async (req, res) => {
     const validatedData = validate(req.body, initializeCarSchema);
     if (!validatedData) {
-        res.status(400).json({
-            ok: false,
-            msg: "Invalid data"
-        });
+        throw new HttpExeception("Invalid data", 422, Exceptions.INVALID_DATA);
     }
-    else {
-        try {
-            const car = await prisma.car.create({
-                data: {
-                    ...validatedData
-                },
-                select: {
-                    id: true
-                }
-            });
-            res.status(201).json({
-                ok: true,
-                msg: "Car created successfully",
-                data: {
-                    id: car.id
-                }
-            });
+    const car = await prisma.carModel.create({
+        data: {
+            ...validatedData
+        },
+        select: {
+            id: true
         }
-        catch (err) {
-            console.log(err);
-            res.status(500).json({
-                ok: false,
-                msg: "Something went wrong"
-            });
+    });
+    res.status(201).json({
+        ok: true,
+        msg: "Car created successfully",
+        data: {
+            id: car.id
         }
-    }
-    ;
+    });
 };
 export default initializeCar;
-//# sourceMappingURL=initialize.js.map

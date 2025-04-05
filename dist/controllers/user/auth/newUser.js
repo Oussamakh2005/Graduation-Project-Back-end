@@ -1,53 +1,41 @@
 import validate from "../../../utils/validation.js";
 import { newUserSchema } from "../../../validation/user.js";
-import prisma from "../../../services/prismaClient.js";
+import prisma from "../../../services/db/prismaClient.js";
 import { signJwt } from "../../../utils/signJwt.js";
-import sendEmail from "../../../utils/sendEmail.js";
+import sendVerificaionEmail from "../../../services/email/sendVerifucationEmail.js";
 import hasher from "../../../utils/hasher.js";
 import { APP_URI } from "../../../env.js";
+import HttpExeception from "../../../utils/HttpExeception.js";
+import Exceptions from "../../../utils/Exceptions.js";
 const newUser = async (req, res) => {
     const validatedData = validate(req.body, newUserSchema);
     if (!validatedData) {
-        res.status(400).json({
-            ok: false,
-            message: "Invalid data"
+        throw new HttpExeception("Invalid data", 422, Exceptions.INVALID_DATA);
+    }
+    const user = await prisma.user.findUnique({
+        where: {
+            email: validatedData.email
+        }
+    });
+    if (user) {
+        throw new HttpExeception("Email already in used", 403, Exceptions.ALREADY_EXIST);
+    }
+    await prisma.user.create({
+        data: {
+            ...validatedData,
+            password: await hasher(validatedData.password),
+        }
+    });
+    const token = signJwt({ email: validatedData.email }, 1000 * 60 * 60 * 24);
+    const isSend = sendVerificaionEmail(validatedData.email, `${APP_URI}/api/user/verify?token=${token}`);
+    if (await isSend) {
+        res.status(200).json({
+            ok: true,
+            message: "User created successfully check your email to verify your account"
         });
     }
     else {
-        const user = await prisma.user.findUnique({
-            where: {
-                email: validatedData.email
-            }
-        });
-        if (user) {
-            res.status(400).json({
-                ok: false,
-                message: "Email already exists"
-            });
-        }
-        else {
-            await prisma.user.create({
-                data: {
-                    ...validatedData,
-                    password: await hasher(validatedData.password),
-                }
-            });
-            const token = signJwt({ email: validatedData.email }, 1000 * 60 * 60 * 24);
-            const isSend = sendEmail(validatedData.email, `${APP_URI}/api/user/verify?token=${token}`);
-            if (await isSend) {
-                res.status(200).json({
-                    ok: true,
-                    message: "User created successfully check your email to verify"
-                });
-            }
-            else {
-                res.status(500).json({
-                    ok: false,
-                    message: "Failed to send email"
-                });
-            }
-        }
+        throw new HttpExeception("Faild to send email", 500, Exceptions.INTERNAL_ERROR);
     }
 };
 export default newUser;
-//# sourceMappingURL=newUser.js.map

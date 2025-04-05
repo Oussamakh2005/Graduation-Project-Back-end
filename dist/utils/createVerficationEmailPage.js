@@ -131,4 +131,3 @@ const verificationEmailPage = (link) => {
 </html>`;
 };
 export default verificationEmailPage;
-//# sourceMappingURL=createVerficationEmailPage.js.map

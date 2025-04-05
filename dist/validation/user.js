@@ -7,4 +7,3 @@ export const newUserSchema = z.object({
     password: z.string().min(8).max(20),
 });
 export const updateUserRoleSchema = z.enum(["ADMIN", "SALES", "PAYMENT", "CLIENT"]);
-//# sourceMappingURL=user.js.map

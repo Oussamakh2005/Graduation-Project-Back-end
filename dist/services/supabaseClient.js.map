@@ -1,1 +1,0 @@
-{"version":3,"file":"supabaseClient.js","sourceRoot":"","sources":["../../src/services/supabaseClient.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,uBAAuB,CAAC;AACrD,OAAO,EAAE,YAAY,EAAE,YAAY,EAAE,MAAM,WAAW,CAAC;AAEvD,MAAM,QAAQ,GAAG,YAAY,CAAC,YAAY,EAAC,YAAY,CAAC,CAAC;AAEzD,eAAe,QAAQ,CAAC"}

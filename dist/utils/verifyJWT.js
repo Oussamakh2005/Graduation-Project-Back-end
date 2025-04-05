@@ -9,4 +9,3 @@ export const verifyJWT = (token) => {
         return null;
     }
 };
-//# sourceMappingURL=verifyJWT.js.map

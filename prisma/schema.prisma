@@ -22,8 +22,8 @@ enum Role {
 }
 
 //Car type 
-enum CarType {
-  SUDAN
+enum CarModelType {
+  SEDAN
   HATCHBACK
   SUV
   TRUCK
@@ -43,9 +43,9 @@ enum Transmission {
 
 //Car drive type 
 enum DriveType {
-  FWD
-  RWD
-  AWD
+  FRONT_WHEEL
+  REAR_WHEEL
+  ALL_WHEEL
 }
 
 //Engine type 
@@ -57,8 +57,8 @@ enum EngineType {
   HYBRID
 }
 
-//Payment type
-enum PaymentType {
+//Payment method
+enum PaymentMethod {
   CASH
   ONLINE
   INSTALLMENT
@@ -66,14 +66,34 @@ enum PaymentType {
 
 //Sale status
 enum PaymentStatus {
-  ONPAYING
+  PENDING
+  IN_PROGRESS
   COMPLETED
 }
+enum PickupStatus {
+  PENDING     // Car not yet ready for pickup
+  READY       // Car ready for pickup
+  PICKED_UP   // Client has picked up the car
+  CANCELLED   // Pickup was cancelled for some reason
+}
+
 //Installment status
 enum InstallmentStatus {
   PENDING
   PAID
   OVERDUE
+}
+
+//Plan status :
+enum PlanStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+//Payment type :
+enum PaymentType {
+  DOWNPAYMENT
+  INSTALLMENT_PAYMENT
+  FULL_PAYMENT
 }
 
 //User model
@@ -89,15 +109,16 @@ model User {
   sales      Sale[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  @@index([email,id]) 
 }
 
-//Car model
-model Car {
+//Car Model model
+model CarModel {
   //initialize
   id           String       @id @default(cuid())
   model        String
-  year         String
-  type         CarType
+  year         Int
+  type         CarModelType
   //second step
   engine       Engine[]
   //third step
@@ -105,14 +126,17 @@ model Car {
   driveType    DriveType
   colors       String[]     @default([])
   features     String[]     @default([])
-  price        Float?
-  discount     Float        @default(0)
+  price        Int          
+  discount     Int         
   availability Boolean      @default(false)
+  infoComplete Boolean      @default(false) // to check if the car model is complete or not
   //last step
+  mainImage    String?
   images       String[]     @default([])
   sales        Sale[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+  @@index([year, type])
 }
 
 //Engine model
@@ -121,58 +145,74 @@ model Engine {
   type       EngineType
   capacity   Int
   horsepower Int
-  carId      String
-  car        Car        @relation(fields: [carId], references: [id])
+  carModelId      String
+  carModel        CarModel       @relation(fields: [carModelId], references: [id])
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+  @@index([carModelId])
 }
 
 model Sale {
-  id            String        @id @default(cuid())
-  carId         String
+  id            String            @id @default(cuid())
+  carModelId        String
   userId        String
-  car           Car           @relation(fields: [carId], references: [id])
-  user          User          @relation(fields: [userId], references: [id])
+  carModel           CarModel               @relation(fields: [carModelId], references: [id])
+  user          User              @relation(fields: [userId], references: [id])
   carColor      String
-  salePrice     Int
-  saleDate      String //YYYY-MM-DD
-  paymentType   PaymentType
-  paymentStatus PaymentStatus  @default(ONPAYING)
+  salePrice     Decimal           @db.Decimal(10, 2)
+  saleDate      String // YYYY-MM-DD
+  paymentMethod PaymentMethod     // Renamed from paymentType for clarity
+  paymentStatus PaymentStatus     @default(PENDING)
+  pickupStatus  PickupStatus      @default(PENDING)
   payments      Payment[]
-  installments  Installment[] //will change it later to installment plan
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  plan          InstallmentPlan[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  @@index([carModelId, userId])
+  @@index([paymentStatus])
 }
 
 model Payment {
   id            String   @id @default(cuid())
   saleId        String
   sale          Sale     @relation(fields: [saleId], references: [id])
-  paymentDate   String //YYYY-MM-DD
-  paymentAmout  Int
-  paymentMethod String
+  paymentDate    String // YYYY-MM-DD 
+  paymentAmount  Decimal  @db.Decimal(10, 2)
+  paymentType   PaymentType
   transactionId String?
+  installment   Installment[]
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
-model Installment {
-  id                String            @id @default(cuid())
-  saleId            String
-  sale              Sale              @relation(fields: [saleId], references: [id]) //will change it later to installment plan
-  installmentNumber Int
-  DueDate           String //YYYY-MM-DD
-  paymentId         String?
-  status            InstallmentStatus
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+model InstallmentPlan {
+  id                    String        @id @default(cuid())
+  saleId                String //FK
+  installmentsNumber    Int
+  remainingInstallments Int
+  installmentValue      Decimal       @db.Decimal(10, 2)
+  status                PlanStatus    @default(IN_PROGRESS)
+  installments          Installment[]
+  sale                  Sale          @relation(fields: [saleId], references: [id])
+  interestRate          Decimal       @default(0) @db.Decimal(5, 2) // Added field
+  downPayment           Decimal       @default(0) @db.Decimal(10, 2) // Added field
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  @@index([saleId])
+  @@index([status])
 }
-/*model PaymentPlan {
-  id                String            @id @default(cuid())
-  saleId            String            //FK
-  months            Int
-  interestRate      Int
-  downPayment       Int
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-}*/
+
+model Installment {
+  id        String            @id @default(cuid())
+  planId    String
+  plan      InstallmentPlan   @relation(fields: [planId], references: [id]) //will change it later to installment plan
+  dueDate   String          // YYYY-MM-DD
+  amount    Decimal           @db.Decimal(10, 2) // Added amount field
+  paymentId String?
+  status    InstallmentStatus  @default(PENDING)
+  payment  Payment ? @relation(fields: [paymentId], references: [id])
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  @@index([planId])
+  @@index([status])
+}

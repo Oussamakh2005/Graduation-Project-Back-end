@@ -4,4 +4,3 @@ const hasher = (data) => {
     return hashed;
 };
 export default hasher;
-//# sourceMappingURL=hasher.js.map

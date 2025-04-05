@@ -1,39 +1,27 @@
 import validate from "../../../utils/validation.js";
 import { carFeaturesSchema } from "../../../validation/car.js";
-import prisma from "../../../services/prismaClient.js";
+import prisma from "../../../services/db/prismaClient.js";
+import Exceptions from "../../../utils/Exceptions.js";
+import HttpExeception from "../../../utils/HttpExeception.js";
 const setCarFeatures = async (req, res) => {
     const validatedData = validate(req.body, carFeaturesSchema);
     if (!validatedData) {
-        res.status(400).json({
-            ok: false,
-            msg: "Invalid data"
-        });
+        throw new HttpExeception("Invalid data", 422, Exceptions.INVALID_DATA);
     }
-    else {
-        try {
-            const car = await prisma.car.update({
-                where: {
-                    id: req.params.id,
-                },
-                data: {
-                    ...validatedData
-                }
-            });
-            res.status(201).json({
-                ok: true,
-                msg: "Car updated successfully",
-                data: {
-                    id: car.id
-                }
-            });
+    const car = await prisma.carModel.update({
+        where: {
+            id: req.params.id,
+        },
+        data: {
+            ...validatedData
         }
-        catch (err) {
-            res.status(500).json({
-                ok: false,
-                msg: "Something went wrong"
-            });
+    });
+    res.status(201).json({
+        ok: true,
+        msg: "Car updated successfully",
+        data: {
+            id: car.id
         }
-    }
+    });
 };
 export default setCarFeatures;
-//# sourceMappingURL=carFeatures.js.map

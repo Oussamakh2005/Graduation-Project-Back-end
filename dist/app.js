@@ -2,6 +2,7 @@ import express from "express";
 import { PORT } from "./env.js";
 import router from "./routes/main.js";
 import cors from "cors";
+import { errorResponse } from "./middlewares/errorHandler.js";
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -15,8 +16,8 @@ app.get('/test', (req, res) => {
     });
 });
 app.use('/api', router);
+app.use(errorResponse);
 app.listen(PORT, (err) => {
     err ? console.log("something went worng") : console.log(`application run on port : ${PORT}`);
 });
 export default app;
-//# sourceMappingURL=app.js.map
