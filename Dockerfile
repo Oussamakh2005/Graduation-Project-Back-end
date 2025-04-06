@@ -7,7 +7,7 @@ COPY package*.json ./
 
 RUN npm install --produciton
 
-COPY ..
+COPY . .
 
 EXPOSE 5000
 
