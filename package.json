@@ -6,7 +6,7 @@
     "start:dev": "tsx watch ./src/app.ts",
     "migrate": "prisma migrate deploy",
     "generate": "prisma generate",
-    "build": "npm install --omit=dev && npm run migrate && npm run generate",
+    "build": "npm install --omit=dev && npm run migrate && npm run generate && npm uninstall prisma ",
     "start": "node ./dist/app.js"
   },
   "keywords": [],
