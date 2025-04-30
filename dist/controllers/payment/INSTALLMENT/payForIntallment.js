@@ -31,7 +31,6 @@ const payForInstallment = async (req, res) => {
             }
         }
     });
-    console.log(installment?.plan.sale.user.email);
     if (!installment) {
         throw new HttpExeception("No installment found", 404, Exceptions.NOT_FOUND);
     }
@@ -69,7 +68,7 @@ const payForInstallment = async (req, res) => {
             });
             await tx.sale.update({
                 where: {
-                    id: installment.planId,
+                    id: installment.plan.sale.id,
                 },
                 data: {
                     paymentStatus: "COMPLETED"

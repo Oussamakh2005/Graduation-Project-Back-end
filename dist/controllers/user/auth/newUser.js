@@ -20,18 +20,36 @@ const newUser = async (req, res) => {
     if (user) {
         throw new HttpExeception("Email already in used", 403, Exceptions.ALREADY_EXIST);
     }
-    await prisma.user.create({
+    const newUser = await prisma.user.create({
         data: {
             ...validatedData,
             password: await hasher(validatedData.password),
+        },
+        select: {
+            id: true
         }
     });
-    const token = signJwt({ email: validatedData.email }, 1000 * 60 * 60 * 24);
+    const token = signJwt({ email: validatedData.email }, 60 * 60 * 24);
     const isSend = sendVerificaionEmail(validatedData.email, `${APP_URI}/api/user/verify?token=${token}`);
+    setTimeout(async () => {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: newUser.id,
+                isVerified: false,
+            }
+        });
+        if (user) {
+            await prisma.user.delete({
+                where: {
+                    id: newUser.id,
+                }
+            });
+        }
+    }, 1000 * 60 * 60 * 24);
     if (await isSend) {
         res.status(200).json({
             ok: true,
-            message: "User created successfully check your email to verify your account"
+            msg: "User created successfully check your email to verify your account"
         });
     }
     else {

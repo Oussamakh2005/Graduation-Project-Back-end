@@ -16,7 +16,7 @@ const login = async (req, res) => {
         throw new HttpExeception("Invalid email or password", 422, Exceptions.INVALID_DATA);
     }
     if (!user.isVerified) {
-        const token = signJwt({ email: user.email }, 1000 * 60 * 60 * 24);
+        const token = signJwt({ email: user.email }, 60 * 60 * 24);
         const isSend = sendVerificaionEmail(user.email, `${APP_URI}/api/user/verify?token=${token}`);
         if (await isSend) {
             throw new HttpExeception("User not verified check your email to verify your account", 200, Exceptions.OK);
@@ -26,7 +26,7 @@ const login = async (req, res) => {
         }
     }
     if (await compareHash(password, user.password)) {
-        const token = signJwt({ id: user.id, role: user.role }, 1000 * 60 * 60 * 24 * 10);
+        const token = signJwt({ id: user.id, role: user.role }, 60 * 60 * 24 * 10);
         res.status(200).json({
             ok: true,
             data: token,

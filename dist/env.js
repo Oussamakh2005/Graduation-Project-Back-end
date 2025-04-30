@@ -7,4 +7,6 @@ export const JWT = process.env.JWT;
 export const SUPABASE_URL = process.env.SUPABASE_URL;
 export const SUPABASE_KEY = process.env.SUPABASE_KEY;
 export const APP_URI = process.env.APP_URI;
+export const CLIENT_URI = process.env.CLIENT_URI;
 export const INTEREST_RATE = parseInt(process.env.INTEREST_RATE);
+export const NODE_ENV = process.env.NODE_ENV;

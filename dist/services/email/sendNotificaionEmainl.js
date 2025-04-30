@@ -9,7 +9,6 @@ const sendNotificaionEmail = async (receiver, message) => {
             text: message,
         });
         if (error) {
-            console.log(error);
             return false;
         }
         return true;

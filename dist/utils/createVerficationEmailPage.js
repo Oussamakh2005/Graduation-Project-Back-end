@@ -1,12 +1,11 @@
 const verificationEmailPage = (link) => {
     return ` <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Your Email Address</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تأكيد بريدك الإلكتروني</title>
   <style>
-    /* General Styles */
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f4f4f4;
@@ -16,6 +15,7 @@ const verificationEmailPage = (link) => {
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      direction: rtl;
     }
 
     .container {
@@ -26,7 +26,7 @@ const verificationEmailPage = (link) => {
       text-align: center;
       max-width: 600px;
       width: 100%;
-      box-sizing: border-box; /* Important for consistent width with padding */
+      box-sizing: border-box;
     }
 
     h1 {
@@ -42,11 +42,10 @@ const verificationEmailPage = (link) => {
       margin-bottom: 25px;
     }
 
-    /* Button Styles */
     .verify-button {
       display: inline-block;
       padding: 12px 30px;
-      background-color: #4CAF50; /* Green */
+      background-color: #4CAF50;
       color: #fff;
       text-decoration: none;
       border-radius: 5px;
@@ -58,10 +57,9 @@ const verificationEmailPage = (link) => {
     }
 
     .verify-button:hover {
-      background-color: #3e8e41; /* Darker Green */
+      background-color: #3e8e41;
     }
 
-    /* Footer Styles */
     .footer {
       margin-top: 30px;
       padding-top: 20px;
@@ -74,17 +72,15 @@ const verificationEmailPage = (link) => {
       margin-bottom: 5px;
     }
 
-    /* Logo (Optional) */
     .logo {
       margin-bottom: 20px;
     }
 
     .logo img {
-      max-width: 150px; /* Adjust as needed */
+      max-width: 150px;
       height: auto;
     }
 
-    /* Responsive Design (Optional) */
     @media (max-width: 600px) {
       .container {
         padding: 20px;
@@ -108,26 +104,27 @@ const verificationEmailPage = (link) => {
 <body>
   <div class="container">
 
-    <!-- Optional Logo -->
+    <!-- شعار الشركة (اختياري) -->
     <div class="logo">
-      <img src="your-logo.png" alt="Your Company Logo">
+      <img src="https://i.postimg.cc/wBK5RsXH/light-logo-removebg-preview.png" alt="شعار شركتك">
     </div>
 
-    <h1>Verify Your Email Address</h1>
+    <h1>تأكيد بريدك الإلكتروني</h1>
 
-    <p>Thank you for registering!  Please click the button below to verify your email address and activate your account.</p>
+    <p>شكرًا لتسجيلك! يرجى النقر على الزر أدناه لتأكيد بريدك الإلكتروني وتفعيل حسابك.</p>
 
-    <a href="${link}" class="verify-button">Verify Email</a>
+    <a href="${link}" class="verify-button">تأكيد البريد</a>
 
-    <p>If the button above doesn't work, you can copy and paste the following link into your browser:</p>
+    <p>إذا لم يعمل الزر أعلاه، يمكنك نسخ الرابط التالي ولصقه في متصفحك:</p>
     <p>${link}</p>
 
     <div class="footer">
-      <p>This is an automated email, please do not reply.</p>
-      <p>© 2025 Drivona. All rights reserved.</p>
+      <p>هذه رسالة بريد إلكتروني تلقائية، الرجاء عدم الرد.</p>
+      <p>© 2025 دريفونا. جميع الحقوق محفوظة.</p>
     </div>
   </div>
 </body>
-</html>`;
+</html>
+`;
 };
 export default verificationEmailPage;

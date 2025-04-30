@@ -5,6 +5,7 @@ import HttpExeception from "../../../utils/HttpExeception.js";
 import Exceptions from "../../../utils/Exceptions.js";
 const setEngine = async (req, res) => {
     const validatedData = validate(req.body, engineSchema);
+    console.log(req.body);
     if (!validatedData) {
         throw new HttpExeception("Invalid data", 422, Exceptions.INVALID_DATA);
     }
@@ -16,6 +17,9 @@ const setEngine = async (req, res) => {
     res.status(201).json({
         ok: true,
         msg: "Engine created successfully",
+        data: {
+            id: validatedData.carModelId
+        }
     });
 };
 export default setEngine;

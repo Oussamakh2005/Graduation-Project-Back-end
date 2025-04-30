@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: "*"
+    origin: "*",
 }));
 app.get('/test', (req, res) => {
     res.status(200).json({

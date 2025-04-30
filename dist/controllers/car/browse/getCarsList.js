@@ -10,7 +10,14 @@ const getCarsList = async (req, res) => {
             model: true,
             price: true,
             discount: true,
-            mainImage: true
+            mainImage: true,
+            transmission: true,
+            seats: true,
+            engine: {
+                select: {
+                    type: true,
+                }
+            }
         },
         skip: (5 * (skip - 1)),
         take: 5,

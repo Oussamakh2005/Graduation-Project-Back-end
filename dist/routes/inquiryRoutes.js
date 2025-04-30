@@ -1,0 +1,15 @@
+import { Router } from "express";
+import { newInquiry } from "../controllers/inquiry/newInquiry.js";
+import { errorHandler } from "../middlewares/errorHandler.js";
+import { getInquiries } from "../controllers/inquiry/getInquiries.js";
+import isSale from "../middlewares/isSale.js";
+import { getInquiry } from "../controllers/inquiry/getInquiry.js";
+import { responseInquiry } from "../controllers/inquiry/responseInquiry.js";
+import { deleteInquiry } from "../controllers/inquiry/deleteInquiry.js";
+const inquiryRouter = Router();
+inquiryRouter.post('/', errorHandler(newInquiry));
+inquiryRouter.get('/', errorHandler(isSale), errorHandler(getInquiries));
+inquiryRouter.get('/:id', errorHandler(isSale), errorHandler(getInquiry));
+inquiryRouter.post('/response/:id', errorHandler(isSale), errorHandler(responseInquiry));
+inquiryRouter.delete('/:id', errorHandler(isSale), errorHandler(deleteInquiry));
+export default inquiryRouter;
