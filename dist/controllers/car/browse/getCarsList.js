@@ -13,6 +13,8 @@ const getCarsList = async (req, res) => {
             mainImage: true,
             transmission: true,
             seats: true,
+            year: true,
+            availability: true,
             engine: {
                 select: {
                     type: true,

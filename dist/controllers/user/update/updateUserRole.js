@@ -14,7 +14,7 @@ const updateUserRole = async (req, res) => {
             id: id,
         },
         data: {
-            role: validatedData
+            role: validatedData.role,
         }
     });
     res.status(200).json({
