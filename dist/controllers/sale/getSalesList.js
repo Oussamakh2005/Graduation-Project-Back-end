@@ -11,6 +11,24 @@ const getSalesList = async (req, res) => {
             paymentMethod: where.paymentMethod,
             paymentStatus: where.paymentStatus,
         },
+        select: {
+            id: true,
+            user: {
+                select: {
+                    firstName: true,
+                    lastName: true
+                }
+            },
+            carModel: {
+                select: {
+                    model: true
+                }
+            },
+            salePrice: true,
+            saleDate: true,
+            paymentStatus: true,
+            pickupStatus: true,
+        },
         skip: skip,
         take: 10
     });

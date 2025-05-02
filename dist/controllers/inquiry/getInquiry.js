@@ -6,6 +6,9 @@ export const getInquiry = async (req, res) => {
     const inquiry = await prisma.inquiry.findUnique({
         where: {
             id: id,
+        },
+        select: {
+            message: true,
         }
     });
     if (!inquiry) {
