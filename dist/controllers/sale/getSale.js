@@ -7,6 +7,21 @@ const getSale = async (req, res) => {
         where: {
             id: saleId,
         },
+        include: {
+            carModel: {
+                select: {
+                    model: true,
+                    mainImage: true,
+                },
+            },
+            user: {
+                select: {
+                    firstName: true,
+                    lastName: true,
+                    email: true
+                }
+            }
+        }
     });
     if (!sale) {
         throw new HttpExeception("Sale not found", 404, Exceptions.NOT_FOUND);
