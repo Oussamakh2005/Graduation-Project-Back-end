@@ -3,7 +3,7 @@ import Exceptions from "../../../utils/Exceptions.js";
 import prisma from "../../../services/db/prismaClient.js";
 import dateFormatter from "../../../utils/dateFormatter.js";
 import sendNotificaionEmail from "../../../services/email/sendNotificaionEmainl.js";
-const makeFullPayment = async (req, res) => {
+const makeDownPayment = async (req, res) => {
     const saleId = req.params.saleId;
     const sale = await prisma.sale.findUnique({
         where: {
@@ -22,23 +22,17 @@ const makeFullPayment = async (req, res) => {
     if (!sale) {
         throw new HttpExeception("Sale not found", 404, Exceptions.NOT_FOUND);
     }
-    if (sale.paymentMethod !== "CASH") {
-        throw new HttpExeception("Sale is not in full payment", 400, Exceptions.NOT_OK);
-    }
-    if (sale.paymentStatus !== "IN_PROGRESS") {
-        if (sale.paymentStatus == "PENDING") {
-            throw new HttpExeception("You have to pay down payment first", 400, Exceptions.NOT_OK);
-        }
+    if (sale.paymentStatus !== "PENDING") {
         throw new HttpExeception("Payment is already done", 400, Exceptions.ALREADY_EXIST);
     }
     return prisma.$transaction(async (tx) => {
-        const paymentValue = Number(sale.salePrice) * 0.8;
+        const downPaymentValue = Number(sale.salePrice) * 0.2;
         await tx.payment.create({
             data: {
                 saleId: saleId,
                 paymentDate: dateFormatter(new Date()),
-                paymentAmount: paymentValue,
-                paymentType: "FULL_PAYMENT"
+                paymentAmount: downPaymentValue,
+                paymentType: "DOWNPAYMENT"
             }
         });
         await tx.sale.update({
@@ -46,15 +40,14 @@ const makeFullPayment = async (req, res) => {
                 id: saleId,
             },
             data: {
-                paymentStatus: "COMPLETED"
+                paymentStatus: "IN_PROGRESS"
             }
         });
-        sendNotificaionEmail(sale.user.email, `عزيزي ${sale.user.firstName + " " + sale.user.lastName}،\n\nيسعدنا إبلاغك بأنه قد تم معالجة الدفعة  التكميلية
- الخاصة بك بقيمة ${sale.salePrice} بنجاح.\n\nشكرًا لشرائك!\n\nمع أطيب التحيات،\nفريق Drivona`);
+        sendNotificaionEmail(sale.user.email, `عزيزي ${sale.user.firstName + " " + sale.user.lastName}،\n\nيسعدنا إبلاغك بأنه قد تم معالجة الدفعة المقدمة الخاصة بك بقيمة ${downPaymentValue} بنجاح.\n\nشكرًا لشرائك!\n\nمع أطيب التحيات،\nفريق Drivona`);
         res.status(200).json({
             ok: true,
-            message: "Payment done successfully"
+            message: "Down payment done successfully"
         });
     });
 };
-export default makeFullPayment;
+export default makeDownPayment;

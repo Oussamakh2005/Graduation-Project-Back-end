@@ -12,6 +12,6 @@ const saleRouter = Router();
 saleRouter.post('/:carId', errorHandler(isAuthenticated), errorHandler(newSale));
 saleRouter.get('/summary', errorHandler(isAdmin), errorHandler(getSalesSummary));
 saleRouter.get('/:saleId', errorHandler(isAuthenticated), errorHandler(getSale));
-saleRouter.get('/', errorHandler(isSale), errorHandler(getSalesList));
+saleRouter.get('/', errorHandler(getSalesList));
 saleRouter.put('/pickup/:id', errorHandler(isSale), errorHandler(updatePickupStatus));
 export default saleRouter;
