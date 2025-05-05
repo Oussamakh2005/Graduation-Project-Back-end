@@ -9,6 +9,8 @@ import salesChart from "../controllers/report/salesChart.js";
 import paymentHighlights from "../controllers/report/paymentHighlights.js";
 import isPayment from "../middlewares/isPayment.js";
 import lastPayments from "../controllers/report/lastPayments.js";
+import authenticated from "../middlewares/authenticated.js";
+import clientHightlights from "../controllers/report/clientHightlights.js";
 const reportRouter = Router();
 reportRouter.get('/adminHighlights', errorHandler(isAdmin), errorHandler(adminHighlights));
 reportRouter.get('/adminChart', errorHandler(isAdmin), errorHandler(adminChart));
@@ -16,4 +18,5 @@ reportRouter.get('/salesHighlights', errorHandler(isSale), errorHandler(salesHig
 reportRouter.get('/salesChart', errorHandler(isSale), errorHandler(salesChart));
 reportRouter.get('/paymentHighlights', errorHandler(isPayment), errorHandler(paymentHighlights));
 reportRouter.get('/lastPayments', errorHandler(isPayment), errorHandler(lastPayments));
+reportRouter.get('/clientHightlights', errorHandler(authenticated), errorHandler(clientHightlights));
 export default reportRouter;

@@ -38,31 +38,31 @@ const updatePickupStatus = async (req, res) => {
     });
     switch (validatedData.status) {
         case "READY":
-            sendNotificaionEmail(sale.user.email, `Dear ${sale.user.firstName} ${sale.user.lastName},
+            sendNotificaionEmail(sale.user.email, `عزيزي ${sale.user.firstName} ${sale.user.lastName}،
 
-We are pleased to inform you that your car is now ready for pickup at our facility. You can visit us during our business hours to collect your vehicle.
+يسعدنا إبلاغك بأن سيارتك أصبحت جاهزة للاستلام من مركزنا. يمكنك زيارتنا خلال ساعات العمل لاستلام سيارتك.
 
-Location: Drivona Pickup Center
-Business Hours: Monday-Friday 9:00 AM - 6:00 PM, Saturday 10:00 AM - 4:00 PM
+الموقع: مركز استلام Drivona  
+ساعات العمل: من الإثنين إلى الجمعة من 9:00 صباحًا حتى 6:00 مساءً، ويوم السبت من 10:00 صباحًا حتى 4:00 مساءً
 
-Please bring your ID and purchase documentation when you come to pick up your car.
+يرجى إحضار بطاقة الهوية ووثائق الشراء عند الحضور لاستلام السيارة.
 
-If you have any questions, please don't hesitate to contact our customer service.
+إذا كانت لديك أي استفسارات، لا تتردد في التواصل مع خدمة العملاء لدينا.
 
-Best regards,
-Drivona Team`);
+مع أطيب التحيات،  
+فريق Drivona`);
             break;
         case "PICKED_UP":
-            sendNotificaionEmail(sale.user.email, `Dear ${sale.user.firstName} ${sale.user.lastName},
+            sendNotificaionEmail(sale.user.email, `عزيزي ${sale.user.firstName} ${sale.user.lastName}،
 
-This is to confirm that you have successfully picked up your car from our facility. 
+نود تأكيد أنك قد استلمت سيارتك بنجاح من مركزنا.
 
-We hope you are satisfied with your purchase and the service provided by Drivona. If you have any feedback or concerns about your experience, please let us know.
+نأمل أن تكون راضيًا عن عملية الشراء والخدمة التي قدمناها لك في Drivona. إذا كان لديك أي ملاحظات أو استفسارات بشأن تجربتك، فلا تتردد في إخبارنا.
 
-Thank you for choosing Drivona for your automotive needs. We look forward to serving you again in the future.
+شكرًا لاختيارك Drivona لتلبية احتياجاتك في عالم السيارات. نتطلع إلى خدمتك مرة أخرى في المستقبل.
 
-Best regards,
-Drivona Team`);
+مع أطيب التحيات،  
+فريق Drivona`);
             break;
     }
     res.status(200).json({
