@@ -50,7 +50,7 @@ const makeFullPayment = async (req, res) => {
             }
         });
         sendNotificaionEmail(sale.user.email, `عزيزي ${sale.user.firstName + " " + sale.user.lastName}،\n\nيسعدنا إبلاغك بأنه قد تم معالجة الدفعة  التكميلية
- الخاصة بك بقيمة ${sale.salePrice} بنجاح.\n\nشكرًا لشرائك!\n\nمع أطيب التحيات،\nفريق Drivona`);
+ الخاصة بك بقيمة ${paymentValue} بنجاح.\n\nشكرًا لشرائك!\n\nمع أطيب التحيات،\nفريق Drivona`);
         res.status(200).json({
             ok: true,
             message: "Payment done successfully"
