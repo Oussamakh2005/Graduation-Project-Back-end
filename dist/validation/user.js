@@ -9,3 +9,9 @@ export const newUserSchema = z.object({
 export const updateUserRoleSchema = z.object({
     role: z.enum(["ADMIN", "SALES", "PAYMENT", "CLIENT"])
 });
+export const verificationEmailSchema = z.object({
+    email: z.string().email()
+});
+export const updatePasswordSchema = z.object({
+    password: z.string().min(8).max(20),
+});

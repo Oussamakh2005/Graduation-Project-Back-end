@@ -239,3 +239,11 @@ model Inquiry {
   updatedAt DateTime @updatedAt
 }
 
+model ResetPassword {
+  id        String   @id @default(cuid())
+  userId    String
+  isValid   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

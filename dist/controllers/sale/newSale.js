@@ -3,7 +3,6 @@ import { newSaleSchema } from "../../validation/sale.js";
 import prisma from "../../services/db/prismaClient.js";
 import HttpExeception from "../../utils/HttpExeception.js";
 import Exceptions from "../../utils/Exceptions.js";
-import { INTEREST_RATE } from "../../env.js";
 import dateFormatter from "../../utils/dateFormatter.js";
 const newSale = async (req, res) => {
     const validatedData = validate(req.body, newSaleSchema);
@@ -25,13 +24,7 @@ const newSale = async (req, res) => {
         throw new HttpExeception("Car not found or not available for sale", 404, Exceptions.NOT_FOUND);
     }
     return prisma.$transaction(async (tx) => {
-        let totalPrice = 0;
-        if (validatedData.paymentMethod === "INSTALLMENT") {
-            totalPrice = (car.price - car.discount) + (Math.ceil((car.price * INTEREST_RATE) / 100));
-        }
-        else {
-            totalPrice = car.price - car.discount;
-        }
+        let totalPrice = car.price - car.discount;
         const sale = await tx.sale.create({
             data: {
                 carModelId: req.params.carId,
