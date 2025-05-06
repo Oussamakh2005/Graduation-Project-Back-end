@@ -5,7 +5,7 @@ import Exceptions from "../../../utils/Exceptions.js";
 import { signJwt } from "../../../utils/signJwt.js";
 import prisma from "../../../services/db/prismaClient.js";
 import { CLIENT_URI, RESET_PASSWORD_JWT } from "../../../env.js";
-import sendVerificaionEmail from "../../../services/email/sendVerifucationEmail.js";
+import sendNotificaionEmail from "../../../services/email/sendNotificaionEmainl.js";
 const sendPasswordVerificationEmail = async (req, res) => {
     const validatedData = validate(req.body, verificationEmailSchema);
     console.log(req.body);
@@ -32,7 +32,7 @@ const sendPasswordVerificationEmail = async (req, res) => {
         }
     });
     const token = signJwt({ id: resetPassword.id }, 60 * 60, RESET_PASSWORD_JWT);
-    const isSend = sendVerificaionEmail(validatedData.email, `${CLIENT_URI}/main/reset_your_password.html?token=${token}`);
+    const isSend = sendNotificaionEmail(validatedData.email, `لقد طلبت إعادة تعيين كلمة المرور الخاصة بك. لإتمام العملية، يرجى النقر على الرابط التالي:\n\n${CLIENT_URI}/main/reset_your_password.html?token=${token}\n\nإذا لم تطلب هذه العملية، يمكنك تجاهل هذه الرسالة بأمان.\n\nمع أطيب التحيات،\nفريق Drivona`);
     if (await isSend) {
         res.status(200).json({
             ok: true,
