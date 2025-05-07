@@ -6,11 +6,6 @@ const deleteCar = async (req, res) => {
             id: id
         }
     });
-    await prisma.engine.deleteMany({
-        where: {
-            carModelId: id
-        }
-    });
     res.status(200).json({
         ok: true,
         msg: "Car deleted successfully",

@@ -13,6 +13,7 @@ export const errorHandler = (fun) => {
             await fun(req, res, next);
         }
         catch (err) {
+            console.log(err);
             if (err instanceof HttpExeception) {
                 next(err);
             }
