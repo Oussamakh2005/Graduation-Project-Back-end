@@ -10,6 +10,7 @@ const getCar = async (req, res) => {
         include: {
             engine: {
                 select: {
+                    id: true,
                     type: true,
                     capacity: true,
                     horsepower: true,
