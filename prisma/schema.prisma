@@ -109,6 +109,7 @@ model User {
   role       Role     @default(CLIENT)
   isVerified Boolean  @default(false)
   sales      Sale[]
+  reviews    Review[]
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -140,6 +141,7 @@ model CarModel {
   mainImage    String?
   images       String[]     @default([])
   sales        Sale[]
+  reviews      Review[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
@@ -164,8 +166,8 @@ model Sale {
   id            String            @id @default(cuid())
   carModelId    String
   userId        String
-  carModel      CarModel          @relation(fields: [carModelId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
-  user          User              @relation(fields: [userId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
+  carModel      CarModel          @relation(fields: [carModelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   carColor      String
   salePrice     Decimal           @db.Decimal(10, 2)
   saleDate      String // YYYY-MM-DD
@@ -184,7 +186,7 @@ model Sale {
 model Payment {
   id            String        @id @default(cuid())
   saleId        String
-  sale          Sale          @relation(fields: [saleId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
+  sale          Sale          @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   paymentDate   String // YYYY-MM-DD 
   paymentAmount Decimal       @db.Decimal(10, 2)
   paymentType   PaymentType
@@ -202,7 +204,7 @@ model InstallmentPlan {
   installmentValue      Decimal       @db.Decimal(10, 2)
   status                PlanStatus    @default(IN_PROGRESS)
   installments          Installment[]
-  sale                  Sale          @relation(fields: [saleId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
+  sale                  Sale          @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   interestRate          Decimal       @default(0) @db.Decimal(5, 2) // Added field
   downPayment           Decimal       @default(0) @db.Decimal(10, 2) // Added field
   createdAt             DateTime      @default(now())
@@ -215,12 +217,12 @@ model InstallmentPlan {
 model Installment {
   id        String            @id @default(cuid())
   planId    String
-  plan      InstallmentPlan   @relation(fields: [planId], references: [id] , onDelete: Cascade, onUpdate: Cascade) //will change it later to installment plan
+  plan      InstallmentPlan   @relation(fields: [planId], references: [id], onDelete: Cascade, onUpdate: Cascade) //will change it later to installment plan
   dueDate   String // YYYY-MM-DD
   amount    Decimal           @db.Decimal(10, 2) // Added amount field
   paymentId String?
   status    InstallmentStatus @default(PENDING)
-  payment   Payment?          @relation(fields: [paymentId], references: [id] , onDelete: Cascade, onUpdate: Cascade)
+  payment   Payment?          @relation(fields: [paymentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
@@ -247,3 +249,13 @@ model ResetPassword {
   updatedAt DateTime @updatedAt
 }
 
+model Review {
+  id         String   @id @default(cuid())
+  comment    String   @db.Text
+  userId     String
+  carModelId String
+  carModel   CarModel @relation(fields: [carModelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
