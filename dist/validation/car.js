@@ -1,7 +1,7 @@
 import { z } from "zod";
 export const initializeCarSchema = z.object({
     model: z.string().min(2),
-    year: z.number().min(2022),
+    year: z.number().min(2000),
     type: z.enum(["SEDAN", "HATCHBACK", "SUV", "TRUCK", "VAN", "COUPE", "CONVERTIBLE", "WAGON", "SPORTS", "HYBRID"]),
     transmission: z.enum(["MANUAL", "AUTO"]),
     driveType: z.enum(["FRONT_WHEEL", "REAR_WHEEL", "ALL_WHEEL"]),
