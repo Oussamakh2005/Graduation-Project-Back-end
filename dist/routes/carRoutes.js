@@ -13,6 +13,7 @@ import getIncompletedInfoCars from "../controllers/car/browse/getIncompletedInfo
 import uploadCarImages2 from "../controllers/car/newCar/uploadCarImage2.js";
 import updateCarMain from "../controllers/car/update/updateCarMain.js";
 import updateCarFeatures from "../controllers/car/update/updateCarFeatures.js";
+import updateCarImage from "../controllers/car/update/updateCarImage.js";
 const carsRouter = Router();
 carsRouter.post('/init', errorHandler(isAdmin), errorHandler(initializeCar));
 carsRouter.post('/engine', errorHandler(isAdmin), errorHandler(setEngine));
@@ -23,6 +24,7 @@ carsRouter.get('/incompleted', errorHandler(isAdmin), errorHandler(getIncomplete
 carsRouter.get('/:id', errorHandler(getCar));
 carsRouter.put('/update/main/:id', errorHandler(isAdmin), errorHandler(updateCarMain));
 carsRouter.put('/update/features/:id', errorHandler(isAdmin), errorHandler(updateCarFeatures));
+carsRouter.put('/update/image/:id', upload.single("image"), errorHandler(isAdmin), errorHandler(updateCarImage));
 carsRouter.put('/update/engine/:id', errorHandler(isAdmin), errorHandler(updateEngine));
 carsRouter.delete('/:id', errorHandler(isAdmin), errorHandler(deleteCar));
 export default carsRouter;
