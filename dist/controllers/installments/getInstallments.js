@@ -6,7 +6,7 @@ const getInstallments = async (req, res) => {
     const installments = await prisma.installment.findMany({
         where: {
             plan: {
-                saleId: saleId,
+                saleId: +saleId,
             }
         },
     });

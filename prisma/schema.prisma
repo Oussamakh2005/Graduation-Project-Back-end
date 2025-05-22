@@ -78,14 +78,14 @@ enum PickupStatus {
   CANCELLED // Pickup was cancelled for some reason
 }
 
-//Installment status
+//Installment status : cnacled
 enum InstallmentStatus {
   PENDING
   PAID
   OVERDUE
 }
 
-//Plan status :
+//Plan status : cancled
 enum PlanStatus {
   IN_PROGRESS
   COMPLETED
@@ -163,7 +163,7 @@ model Engine {
 }
 
 model Sale {
-  id            String            @id @default(cuid())
+  id            Int            @id @default(autoincrement())
   carModelId    String
   userId        String
   carModel      CarModel          @relation(fields: [carModelId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -183,9 +183,10 @@ model Sale {
   @@index([paymentStatus])
 }
 
+
 model Payment {
   id            String        @id @default(cuid())
-  saleId        String
+  saleId        Int
   sale          Sale          @relation(fields: [saleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   paymentDate   String // YYYY-MM-DD 
   paymentAmount Decimal       @db.Decimal(10, 2)
@@ -196,9 +197,11 @@ model Payment {
   updatedAt     DateTime      @updatedAt
 }
 
+//Cancled
+
 model InstallmentPlan {
   id                    String        @id @default(cuid())
-  saleId                String //FK
+  saleId                Int //FK
   installmentsNumber    Int
   remainingInstallments Int
   installmentValue      Decimal       @db.Decimal(10, 2)
@@ -214,6 +217,7 @@ model InstallmentPlan {
   @@index([status])
 }
 
+//Cancled
 model Installment {
   id        String            @id @default(cuid())
   planId    String

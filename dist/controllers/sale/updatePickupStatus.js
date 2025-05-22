@@ -8,7 +8,7 @@ const updatePickupStatus = async (req, res) => {
     const id = req.params.id;
     const sale = await prisma.sale.findUnique({
         where: {
-            id: id,
+            id: +id,
         },
         select: {
             id: true,

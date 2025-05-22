@@ -7,7 +7,7 @@ const makeDownPayment = async (req, res) => {
     const saleId = req.params.saleId;
     const sale = await prisma.sale.findUnique({
         where: {
-            id: saleId,
+            id: +saleId,
         },
         include: {
             user: {
@@ -29,7 +29,7 @@ const makeDownPayment = async (req, res) => {
         const downPaymentValue = Number(sale.salePrice) * 0.2;
         await tx.payment.create({
             data: {
-                saleId: saleId,
+                saleId: +saleId,
                 paymentDate: dateFormatter(new Date()),
                 paymentAmount: downPaymentValue,
                 paymentType: "DOWNPAYMENT"
@@ -37,7 +37,7 @@ const makeDownPayment = async (req, res) => {
         });
         await tx.sale.update({
             where: {
-                id: saleId,
+                id: +saleId,
             },
             data: {
                 paymentStatus: "IN_PROGRESS"

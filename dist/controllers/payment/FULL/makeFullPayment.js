@@ -7,7 +7,7 @@ const makeFullPayment = async (req, res) => {
     const saleId = req.params.saleId;
     const sale = await prisma.sale.findUnique({
         where: {
-            id: saleId,
+            id: +saleId,
         },
         include: {
             user: {
@@ -35,7 +35,7 @@ const makeFullPayment = async (req, res) => {
         const paymentValue = Number(sale.salePrice) * 0.8;
         await tx.payment.create({
             data: {
-                saleId: saleId,
+                saleId: +saleId,
                 paymentDate: dateFormatter(new Date()),
                 paymentAmount: paymentValue,
                 paymentType: "FULL_PAYMENT"
@@ -43,7 +43,7 @@ const makeFullPayment = async (req, res) => {
         });
         await tx.sale.update({
             where: {
-                id: saleId,
+                id: +saleId,
             },
             data: {
                 paymentStatus: "COMPLETED"

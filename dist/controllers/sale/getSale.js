@@ -5,7 +5,7 @@ const getSale = async (req, res) => {
     const saleId = req.params.saleId;
     const sale = await prisma.sale.findUnique({
         where: {
-            id: saleId,
+            id: +saleId,
         },
         include: {
             carModel: {
