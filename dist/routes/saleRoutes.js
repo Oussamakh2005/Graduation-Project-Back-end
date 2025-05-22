@@ -10,6 +10,7 @@ import isAdmin from "../middlewares/isAdmin.js";
 import getSalesSummary from "../controllers/sale/getSalesSummary.js";
 import authenticated from "../middlewares/authenticated.js";
 import getUserSales from "../controllers/sale/getUserSales.js";
+import cancleSale from "../controllers/sale/cancelSale.js";
 const saleRouter = Router();
 saleRouter.post('/:carId', errorHandler(isAuthenticated), errorHandler(newSale));
 saleRouter.get('/summary', errorHandler(isAdmin), errorHandler(getSalesSummary));
@@ -17,4 +18,5 @@ saleRouter.get('/user', errorHandler(authenticated), errorHandler(getUserSales))
 saleRouter.get('/:saleId', errorHandler(isAuthenticated), errorHandler(getSale));
 saleRouter.get('/', errorHandler(getSalesList));
 saleRouter.put('/pickup/:id', errorHandler(isSale), errorHandler(updatePickupStatus));
+saleRouter.delete('/:id', errorHandler(isAuthenticated), errorHandler(cancleSale));
 export default saleRouter;
