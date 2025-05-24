@@ -1,11 +1,12 @@
 import prisma from "../../services/db/prismaClient.js";
 const adminChart = async (req, res) => {
+    const currentYear = new Date().getFullYear();
     let [from1To2, from3To4, from5To6, from7To8, from9To10, from11To12] = await Promise.all([
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-01-01",
-                    lte: "2025-02-29",
+                    gte: `${currentYear}-01-01`,
+                    lte: `${currentYear}-02-29`,
                 }
             },
             _sum: {
@@ -15,8 +16,8 @@ const adminChart = async (req, res) => {
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-03-01",
-                    lte: "2025-04-30",
+                    gte: `${currentYear}-03-01`,
+                    lte: `${currentYear}-04-30`,
                 }
             },
             _sum: {
@@ -26,8 +27,8 @@ const adminChart = async (req, res) => {
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-05-01",
-                    lte: "2025-06-30",
+                    gte: `${currentYear}-05-01`,
+                    lte: `${currentYear}-06-30`,
                 }
             },
             _sum: {
@@ -37,8 +38,8 @@ const adminChart = async (req, res) => {
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-07-01",
-                    lte: "2025-08-31",
+                    gte: `${currentYear}-07-01`,
+                    lte: `${currentYear}-08-31`,
                 }
             },
             _sum: {
@@ -48,8 +49,8 @@ const adminChart = async (req, res) => {
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-09-01",
-                    lte: "2025-10-31",
+                    gte: `${currentYear}-09-01`,
+                    lte: `${currentYear}-10-31`,
                 }
             },
             _sum: {
@@ -59,8 +60,8 @@ const adminChart = async (req, res) => {
         prisma.payment.aggregate({
             where: {
                 paymentDate: {
-                    gte: "2025-11-01",
-                    lte: "2025-12-31",
+                    gte: `${currentYear}-11-01`,
+                    lte: `${currentYear}-12-31`,
                 }
             },
             _sum: {

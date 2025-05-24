@@ -38,6 +38,14 @@ const newSale = async (req, res) => {
                 id: true,
             }
         });
+        setTimeout(async () => {
+            await prisma.sale.delete({
+                where: {
+                    id: sale.id,
+                    paymentStatus: "PENDING"
+                }
+            });
+        }, 1000 * 60 * 60 * 24 * 7);
         res.status(201).json({
             ok: true,
             msg: "Order sent successfully"
